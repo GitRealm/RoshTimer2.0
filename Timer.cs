@@ -11,21 +11,27 @@ namespace RoshTime2._0
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Controls.Primitives;
+
+    using RoshTime2._0.Annotations;
 
     /// <summary>
     /// The timer.
     /// </summary>
-    internal class Timer
+    internal class Timer: INotifyPropertyChanged
     {
         /// <summary>
         /// Initial seconds.
         /// </summary>
         private readonly int initialSeconds;
+
+        private TimeSpan seconds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Timer"/> class.
@@ -35,24 +41,27 @@ namespace RoshTime2._0
         /// </param>
         public Timer(int inputSeconds)
         {
-            this.Seconds = inputSeconds;
+            this.Seconds = new TimeSpan(0,0,inputSeconds);
             this.initialSeconds = inputSeconds;
+        }
+
+        public void Tick()
+        {
+            this.Seconds = this.Seconds.Add(new TimeSpan(0, 0, -1));
         }
 
         /// <summary>
         /// Gets or sets the seconds.
         /// </summary>
-        public int Seconds { get; set; }
-
-        /// <summary>
-        /// Gets time string.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string GetTimeString()
+        public TimeSpan Seconds
         {
-            return TimeSpan.FromSeconds(this.Seconds).ToString("mm':'ss");
+            get => this.seconds;
+            set
+            {
+
+                this.seconds = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -60,7 +69,15 @@ namespace RoshTime2._0
         /// </summary>
         public void Reset()
         {
-            this.Seconds = this.initialSeconds;
+            this.Seconds = new TimeSpan(0,0,this.initialSeconds);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

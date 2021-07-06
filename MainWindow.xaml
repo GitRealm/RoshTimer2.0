@@ -18,15 +18,15 @@
         </Grid.RowDefinitions>
         <Label Name="LabelAegis" Content="Aegis Reclaim:" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0"/>
         <Separator Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="90px"/>
-        <Label Name="TimeAegis" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label Name="TimeAegis" Content="{Binding Seconds}"  ContentStringFormat="{}{0:mm}:{0:ss}"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" />
 
         <Label Name="LabelMinResp" Content="Minimum Respawn:" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="2"/>
         <Separator Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="120px"/>
-        <Label Name="TimeMinResp" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3"/>
+        <Label Name="TimeMinResp" Content="{Binding Seconds}"  ContentStringFormat="{}{0:mm}:{0:ss}"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3"/>
 
         <Label Name="LabelMaxResp" Content="Maximum Respawn:" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="4"/>
         <Separator Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="120px"/>
-        <Label Name="TimeMaxResp" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="5"/>
+        <Label Name="TimeMaxResp" Content="{Binding Seconds}"  ContentStringFormat="{}{0:mm}:{0:ss}"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="5"/>
 
         <Button Name="ResetButton" Content="Reset" Margin="5,5,50,5" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Click="ResetButton_Click"/>
         <Button Name="PauseButton" Content="Pause" Margin="50,5,5,5" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Click="PauseButton_Click"/>

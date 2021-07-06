@@ -11,6 +11,7 @@
 namespace RoshTime2._0
 {
     using System;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Threading;
 
@@ -51,14 +52,14 @@ namespace RoshTime2._0
             this.minRespTimer = new Timer(480);
             this.maxRespTimer = new Timer(660);
 
-            this.TimeAegis.Content = this.aegisTimer.GetTimeString();
-            this.TimeMinResp.Content = this.minRespTimer.GetTimeString();
-            this.TimeMaxResp.Content = this.maxRespTimer.GetTimeString();
+            this.TimeAegis.DataContext = this.aegisTimer;
+            this.TimeMinResp.DataContext = this.minRespTimer;
+            this.TimeMaxResp.DataContext = this.maxRespTimer;
 
-            var dispatcherTimer = new DispatcherTimer(DispatcherPriority.Normal);
-            dispatcherTimer.Tick += new EventHandler(this.TimerEvent);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            var dispatcherTimer = new BackgroundWorker();
+            dispatcherTimer.DoWork += this.TimerEvent;
+            dispatcherTimer.WorkerReportsProgress = true;
+            dispatcherTimer.RunWorkerAsync();
         }
 
         /// <summary>
@@ -70,21 +71,19 @@ namespace RoshTime2._0
         /// <param name="e">
         /// The e.
         /// </param>
-        private void TimerEvent(object? sender, EventArgs e)
+        private void TimerEvent(object? sender, DoWorkEventArgs e)
         {
-            if (this.paused)
+            BackgroundWorker worker = sender as BackgroundWorker;
+            while (!worker.CancellationPending)
             {
-                return;
+                if (!this.paused)
+                {
+                    this.aegisTimer.Tick();
+                    this.minRespTimer.Tick();
+                    this.maxRespTimer.Tick();
+                }
+                System.Threading.Thread.Sleep(1000);
             }
-
-            this.aegisTimer.Seconds--;
-            this.TimeAegis.Content = this.aegisTimer.GetTimeString();
-
-            this.minRespTimer.Seconds--;
-            this.TimeMinResp.Content = this.minRespTimer.GetTimeString();
-
-            this.maxRespTimer.Seconds--;
-            this.TimeMaxResp.Content = this.maxRespTimer.GetTimeString();
         }
 
         /// <summary>
@@ -114,16 +113,11 @@ namespace RoshTime2._0
         /// </param>
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.paused)
-            {
-                this.paused = false;
-                this.PauseButton.Content = "Pause";
-            }
-            else
-            {
-                this.paused = true;
-                this.PauseButton.Content = "Resume";
-            }
+            
+                this.paused = !this.paused;
+                this.PauseButton.Content = this.paused ?  "Resume": "Pause";
+
+
         }
     }
 }
